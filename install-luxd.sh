@@ -62,6 +62,10 @@ compile() {
 	message "Building luxCoin...this may take a few minutes..."
 	make -f makefile.unix
 	if [ $? -ne 0 ]; then error; fi
+        message "install luxd..."
+        sudo ln -s luxd /usr/bin
+        if [ $? -ne 0 ]; then error; fi
+        
 }
 
 createconf() {

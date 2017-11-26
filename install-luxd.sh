@@ -37,15 +37,6 @@ prepdependencies() { #TODO: add error detection
 	sudo apt-get install -y libdb4.8-dev libdb4.8++-dev
 }
 
-createswap() { #TODO: add error detection
-	message "Creating 2GB temporary swap file...this may take a few minutes..."
-	sudo dd if=/dev/zero of=/swapfile bs=1M count=2000
-	sudo mkswap /swapfile
-	sudo chown root:root /swapfile
-	sudo chmod 0600 /swapfile
-	sudo swapon /swapfile
-}
-
 clonerepo() { #TODO: add error detection
 	message "Cloning from github repository..."
   	cd ~/
@@ -82,7 +73,7 @@ createconf() {
 	mnip=$(curl -s https://api.ipify.org)
 	rpcuser=$(date +%s | sha256sum | base64 | head -c 10 ; echo)
 	rpcpass=$(openssl rand -base64 32)
-	printf "%s\n" "rpcuser=$rpcuser" "rpcpassword=$rpcpass" "rpcallowip=127.0.0.1" "port=28666" "listen=1" "server=1" "daemon=1" "maxconnections=256" "rpcport=9888" "externalip=$mnip" "bind=$mnip" "masternode=1" "masternodeprivkey=$MNPRIVKEY" "masternodeaddr=$mnip:17170" > $CONFILE
+	printf "%s\n" "rpcuser=$rpcuser" "rpcpassword=$rpcpass" "rpcallowip=127.0.0.1" "port=28666" "listen=1" "server=1" "daemon=1" "maxconnections=256" "rpcport=9888" "externalip=$mnip" "bind=$mnip" "masternode=1" "masternodeprivkey=$MNPRIVKEY" "masternodeaddr=$mnip:28666" > $CONFILE
 
         luxd
         message "Wait 10 seconds for daemon to load..."
@@ -93,7 +84,7 @@ createconf() {
         sleep 10s
 	sudo rm $CONFILE
 	message "Updating lux.conf..."
-        printf "%s\n" "rpcuser=$rpcuser" "rpcpassword=$rpcpass" "rpcallowip=127.0.0.1" "port=28666" "listen=1" "server=1" "daemon=1" "maxconnections=256" "rpcport=9888" "externalip=$mnip" "bind=$mnip" "masternode=1" "masternodeprivkey=$MNPRIVKEY" "masternodeaddr=$mnip:17170" > $CONFILE
+        printf "%s\n" "rpcuser=$rpcuser" "rpcpassword=$rpcpass" "rpcallowip=127.0.0.1" "port=28666" "listen=1" "server=1" "daemon=1" "maxconnections=256" "rpcport=9888" "externalip=$mnip" "bind=$mnip" "masternode=1" "masternodeprivkey=$MNPRIVKEY" "masternodeaddr=$mnip:28666" > $CONFILE
 
 }
 

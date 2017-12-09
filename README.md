@@ -1,4 +1,4 @@
-# Luxcoin Masternode Monitor
+# 1 click lux builder
 ==========================
 
 # 1 Click compile lux daemon:

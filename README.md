@@ -1,4 +1,11 @@
-Luxcoin Masternode Monitor
+# Luxcoin Masternode Monitor
 ==========================
 
-	./install-luxd.sh
+# 1 Click compile lux daemon:
+    ./build-luxd.sh
+
+# 1 Click compile lux daemon & deploy your masternode:
+    ./lux-masternode.sh
+
+# 1 Click update lux daemon:
+    ./update-luxd.sh

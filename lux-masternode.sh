@@ -1,6 +1,6 @@
 #!/bin/sh
 #Version 0.0.1
-#Info: Installs luxd daemon, Masternode based on privkey, and a simple web monitor.
+#Info: Installs luxd daemon, Masternode based on privkey.
 #Luxcoin Version 2.2.3 or above
 #Tested OS: Ubuntu 17.04, 16.04, and 14.04
 #TODO: make script less "ubuntu" or add other linux flavors
@@ -38,19 +38,19 @@ prepdependencies() { #TODO: add error detection
 }
 
 clonerepo() { #TODO: add error detection
-	message "Cloning from github repository..."
+	message "Cloning luxcoin source from lux-master repository..."
   	cd ~/
 	git clone https://github.com/216k155/lux.git
 }
 
 compile() {
 	cd lux #TODO: squash relative path
-	message "Preparing to build..."
+	message "Preparing to build luxd..."
 	cd src/leveldb && make clean && make libleveldb.a libmemenv.a
 	if [ $? -ne 0 ]; then error; fi
 	cd ..
 	if [ $? -ne 0 ]; then error; fi
-	message "Building luxCoin...this may take a few minutes..."
+	message "Building lux daemon...this may take a few minutes..."
 	make -f makefile.unix
 	if [ $? -ne 0 ]; then error; fi
         message "install luxd..."
@@ -76,11 +76,11 @@ createconf() {
 	printf "%s\n" "rpcuser=$rpcuser" "rpcpassword=$rpcpass" "rpcallowip=127.0.0.1" "port=28666" "listen=1" "server=1" "daemon=1" "maxconnections=256" "rpcport=9888" "externalip=$mnip" "bind=$mnip" "masternode=1" "masternodeprivkey=$MNPRIVKEY" "masternodeaddr=$mnip:28666" > $CONFILE
 
         luxd
-        message "Wait 10 seconds for daemon to load..."
+        message "Wait 10 seconds for lux daemon to load..."
         sleep 20s
         MNPRIVKEY=$(luxd masternode genkey)
 	luxd stop
-	message "wait 10 seconds for deamon to stop..."
+	message "wait 10 seconds for lux deamon to stop..."
         sleep 10s
 	sudo rm $CONFILE
 	message "Updating lux.conf..."
@@ -88,22 +88,11 @@ createconf() {
 
 }
 
-createhttp() {
-	cd ~/
-	mkdir web
-	cd web
-	wget https://github.com/216k155/lux-masternode-web-monitor/releases/download/v0.0.1/index.html
-	wget https://github.com/216k155/lux-masternode-web-monitor/releases/download/v0.0.1/stats.txt
-	(crontab -l 2>/dev/null; echo "* * * * * echo MN Count:  > ~/web/stats.txt; /usr/local/bin/luxd masternode count >> ~/web/stats.txt; /usr/local/bin/luxd getinfo >> ~/web/stats.txt") | crontab -
-	mnip=$(curl -s https://api.ipify.org)
-	sudo python3 -m http.server 8000 --bind $mnip 2>/dev/null &
-	echo "Web Server Started!  You can now access your stats page at http://$mnip:8000"
-}
 
 success() {
 	luxd
-	message "SUCCESS! Your luxd has started. Masternode.conf setting below..."
-	message "Luxcoin Masternode $mnip:17170 $MNPRIVKEY TXHASH INDEX"
+	message "SUCCESS! Your luxcoin masternode has started. lux.conf setting below..."
+	message "Luxcoin Masternode $mnip:28666 $MNPRIVKEY TXHASH INDEX"
 	exit 0
 }
 
